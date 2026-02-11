@@ -1,26 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #fdf6e3;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --color-paper: #fdfbf7;
+  --color-cover: #2c3e50;
+  --color-gold: #c5a059;
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
+  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+  /* Prevent scrolling for the book experience */
+}
+
+/* 3D Transform Utilities */
+.perspective-1000 {
+  perspective: 1500px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(-180deg);
+}
+
+.pattern-wood {
+  background-color: #e0d6c2;
+  background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+}
+
+.pattern-paper {
+  background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+}
+
+.pattern-tech {
+  background-color: #0f172a;
+  /* Slate 900 */
+  background-image:
+    linear-gradient(rgba(30, 41, 59, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 41, 59, 0.5) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
