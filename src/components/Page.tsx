@@ -24,7 +24,13 @@ export function Page({ index, isFlipped, zIndex, front, back, onFlip }: PageProp
       style={{ zIndex }}
       animate={{ rotateY: isFlipped ? -180 : 0 }}
       transition={{ duration: 0.8, type: "spring", stiffness: 60 }}
-      onClick={() => {
+      onClick={(e) => {
+        // Prevent flipping if clicking a link, button, or element with no-flip class
+        const target = e.target as HTMLElement;
+        if (target.closest('a, button, [class*="no-flip"]') || target.tagName === 'A' || target.tagName === 'BUTTON') {
+          return;
+        }
+        
         const selection = window.getSelection();
         if (selection && selection.toString().length > 0) {
           return;

@@ -53,3 +53,18 @@ body {
     linear-gradient(90deg, rgba(30, 41, 59, 0.5) 1px, transparent 1px);
   background-size: 40px 40px;
 }
+/* Auto Force Landscape on Mobile */
+@media screen and (orientation: portrait) and (max-width: 768px) {
+  .force-landscape {
+    transform: rotate(90deg) !important;
+    transform-origin: center center !important;
+    width: 100vh !important;
+    height: 100vw !important;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    margin-left: -50vh !important;
+    margin-top: -50vw !important;
+    overflow: hidden !important;
+  }
+}

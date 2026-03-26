@@ -9,7 +9,9 @@ import { Intro } from "./content/Intro";
 import { Qualifications } from "./content/Qualifications";
 import { Skills } from "./content/Skills";
 import { Projects } from "./content/Projects";
+import { Internship } from "./content/Internship";
 import { About } from "./content/About";
+import { BackCover } from "./content/BackCover";
 
 import { cn } from "@/lib/utils";
 
@@ -20,7 +22,8 @@ export function Book() {
   const pages = [
     { front: <Cover />, back: <Intro /> },
     { front: <Qualifications />, back: <Skills /> },
-    { front: <Projects />, back: <About /> },
+    { front: <Projects />, back: <Internship /> },
+    { front: <About />, back: <BackCover /> },
   ];
 
   // Intro animation interaction logic removed for simplicity as per updates

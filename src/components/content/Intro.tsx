@@ -35,21 +35,27 @@ export function Intro() {
         </div>
       </div>
       {/* Contact & CV Buttons */}
-      <div className="mt-7 flex gap-4 mb-6 w-full justify-center">
+      <div className="mt-7 flex gap-4 mb-6 w-full justify-center relative z-50 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
         <a 
-          href={portfolioData.personal.cvUrl} 
-          download
-          onClick={(e) => e.stopPropagation()}
-          className="flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-full text-xs md:text-sm hover:bg-gray-700 transition-colors shadow-sm"
+          href="/Gulshan_Kumar.pdf"
+          download="Gulshan_Kumar.pdf"
+          target="_self"
+          rel="noopener noreferrer"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          className="flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-full text-xs md:text-sm hover:bg-gray-700 transition-colors shadow-sm no-flip cursor-pointer"
         >
-          <FaDownload size={14} /> Download CV
+          <FaDownload size={14} className="pointer-events-none" /> Download CV
         </a>
         <a 
-          href={`mailto:${portfolioData.personal.email}`}
-          onClick={(e) => e.stopPropagation()}
-          className="flex items-center gap-2 bg-[#c5a059] text-white px-4 py-2 rounded-full text-xs md:text-sm hover:bg-[#b08d4b] transition-colors shadow-sm"
+          href={`mailto:gulshan311604@gmail.com`}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          className="flex items-center gap-2 bg-[#c5a059] text-white px-4 py-2 rounded-full text-xs md:text-sm hover:bg-[#b08d4b] transition-colors shadow-sm no-flip cursor-pointer"
         >
-          <FaEnvelope size={14} /> Contact Me
+          <FaEnvelope size={14} className="pointer-events-none" /> Contact Me
         </a>
       </div>
     </div>

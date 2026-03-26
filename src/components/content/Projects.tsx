@@ -42,6 +42,7 @@ export function Projects() {
                 href={project.sourceUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
+                onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => e.stopPropagation()}
                 className="flex-1 flex items-center justify-center gap-1 bg-gray-800 text-white text-xs py-2 rounded hover:bg-gray-700 transition-colors"
               >
@@ -51,6 +52,7 @@ export function Projects() {
                 href={project.liveUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
+                onPointerDown={(e) => e.stopPropagation()}
                 onClick={(e) => e.stopPropagation()}
                 className="flex-1 flex items-center justify-center gap-1 bg-blue-600 text-white text-xs py-2 rounded hover:bg-blue-500 transition-colors"
               >

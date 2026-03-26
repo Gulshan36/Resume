@@ -18,6 +18,8 @@ export function About() {
           href={portfolioData.about.social.github} 
           target="_blank" 
           rel="noopener noreferrer"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
           className="p-3 bg-gray-800 text-white rounded-full hover:bg-gray-700 transition-colors"
         >
           <Github className="w-6 h-6" />
@@ -26,6 +28,8 @@ export function About() {
           href={portfolioData.about.social.linkedin} 
           target="_blank" 
           rel="noopener noreferrer"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
           className="p-3 bg-blue-700 text-white rounded-full hover:bg-blue-600 transition-colors"
         >
           <Linkedin className="w-6 h-6" />
@@ -34,6 +38,8 @@ export function About() {
           href={portfolioData.about.social.twitter} 
           target="_blank" 
           rel="noopener noreferrer"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
           className="p-3 bg-blue-400 text-white rounded-full hover:bg-blue-300 transition-colors"
         >
           <Twitter className="w-6 h-6" />

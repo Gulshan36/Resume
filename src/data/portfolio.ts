@@ -34,6 +34,14 @@ export interface Project {
   imageUrl: string;
 }
 
+export interface Internship {
+  company: string;
+  role: string;
+  link: string;
+  socialMediaLink?: string;
+  project: string;
+}
+
 export interface SocialLinks {
   github: string;
   linkedin: string;
@@ -50,6 +58,7 @@ export interface PortfolioData {
   qualifications: Qualification[];
   skills: Skill[];
   projects: Project[];
+  internships: Internship[];
   about: AboutSection;
 }
 
@@ -62,7 +71,7 @@ export const portfolioData: PortfolioData = {
     email: "gulshan311604@gmail.com",
     phone: "+91 9534311604",
     location: "Delhi, India",
-    cvUrl: "/Gulshan Kumar.pdf", // Place your CV file in the public folder
+    cvUrl: "/Gulshan_Kumar.pdf", // Place your CV file in the public folder
   },
   qualifications: [
     {
@@ -149,6 +158,15 @@ export const portfolioData: PortfolioData = {
       liveUrl: "https://food-delivery-xi-ashen.vercel.app/  ",
       imageUrl: "/image copy 3.png",
     },
+  ],
+  internships: [
+    {
+      company: "Company Name",
+      role: "Intern",
+      link: "https://example.com",
+      socialMediaLink: "https://linkedin.com/company/example",
+      project: "Describe the internship project here.",
+    }
   ],
   about: {
     description: `I'm a software engineer with a passion for building scalable and user-friendly applications. 
