@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Book } from "@/components/Book";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Home() {
   const [scale, setScale] = useState(1);
@@ -44,10 +45,24 @@ export default function Home() {
         style={{ transform: isClient ? `scale(${scale})` : 'scale(1)' }}
       >
         <Book />
-        <div className="mt-8 text-sm md:text-base text-gray-600 font-serif italic opacity-70">
-          Click on the pages to flip through the portfolio
-        </div>
       </motion.div>
+
+      {/* Legal Footer — required for Razorpay verification */}
+      <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-4 z-50 pointer-events-auto">
+        {[
+          { href: "/terms",   label: "Terms" },
+          { href: "/privacy", label: "Privacy Policy" },
+          { href: "/refund",  label: "Refund Policy" },
+        ].map(({ href, label }) => (
+          <Link
+            key={href}
+            href={href}
+            className="text-[10px] md:text-xs text-gray-500 hover:text-gray-800 underline underline-offset-2 transition-colors"
+          >
+            {label}
+          </Link>
+        ))}
+      </div>
     </main>
   );
 }

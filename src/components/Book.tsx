@@ -1,10 +1,9 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Page } from "./Page";
 import { Cover } from "./content/Cover";
-// ... content imports
 import { Intro } from "./content/Intro";
 import { Qualifications } from "./content/Qualifications";
 import { Skills } from "./content/Skills";
@@ -14,6 +13,10 @@ import { About } from "./content/About";
 import { BackCover } from "./content/BackCover";
 
 import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+// Page section labels for the indicator
+const PAGE_LABELS = ["Cover", "About Me", "Education", "Skills", "Projects", "Experience", "Contact", "End"];
 
 export function Book() {
   const [flippedIndex, setFlippedIndex] = useState<number>(-1);
@@ -26,100 +29,186 @@ export function Book() {
     { front: <About />, back: <BackCover /> },
   ];
 
-  // Intro animation interaction logic removed for simplicity as per updates
+  // Use functional update so we don't need flippedIndex in deps
+  const handleFlip = useCallback((index: number) => {
+    setZBoostIndex(index);
+    setFlippedIndex(prev => {
+      if (index <= prev) return index - 1;
+      return index;
+    });
+    setTimeout(() => setZBoostIndex(null), 750);
+  }, []);
 
-  const handleFlip = (index: number) => {
-    // Determine which page is effectively moving (the one changing state)
-    // If going forward (Index > Flipped), we are flipping "Index".
-    // If going backward (Index <= Flipped), we are flipping "Index"?? No.
-    // Wait.
-    // If current Flipped is -1. Click 0. moving page is 0.
-    // If current Flipped is 0. Click 0. moving page is 0 (flipping back).
-    
-    // We are clicking "index". That IS the page we are interacting with.
-    // So "index" is always the one that flips?
-    // Not necessarily. 
-    // If I click the LEFT stack (index <= flippedIndex), I flip THAT page back to right.
-    // If I click the RIGHT stack (index > flippedIndex), I flip THAT page to left.
-    // Correct.
-    
-    const movingPage = index;
-    setZBoostIndex(movingPage);
-    
-    if (index <= flippedIndex) {
-      setFlippedIndex(index - 1);
-    } else {
-      setFlippedIndex(index);
-    }
+  // Go to next spread
+  const goForward = useCallback(() => {
+    setFlippedIndex(prev => {
+      if (prev < pages.length - 1) {
+        setZBoostIndex(prev + 1);
+        setTimeout(() => setZBoostIndex(null), 750);
+        return prev + 1;
+      }
+      return prev;
+    });
+  }, [pages.length]);
 
-    // Clear boost after animation
-    setTimeout(() => {
-      setZBoostIndex(null);
-    }, 750);
-  };
+  // Go to previous spread
+  const goBack = useCallback(() => {
+    setFlippedIndex(prev => {
+      if (prev >= 0) {
+        setZBoostIndex(prev);
+        setTimeout(() => setZBoostIndex(null), 750);
+        return prev - 1;
+      }
+      return prev;
+    });
+  }, []);
 
-  // Calculate center shift:
-  // Closed (Index -1): Translate 0
-  // End (Index pages.length-1): Translate 100% (or specific value)
-  // Open (Middle): Translate 50%
-  // We use CSS transform for smooth sliding.
-  
+  // Navigate directly to a view (dot click)
+  const navigateTo = useCallback((targetFlipIndex: number) => {
+    setFlippedIndex(targetFlipIndex);
+    setZBoostIndex(null);
+  }, []);
+
+  // ⌨️ Keyboard Navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if user is typing in an input/textarea
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        goForward();
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        goBack();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [goForward, goBack]);
+
   const isCover = flippedIndex === -1;
   const isEnd = flippedIndex === pages.length - 1;
-  
-  // Logic: 
-  // If Cover: Center Content (No Shift)
-  // If Open: Shift Right to center the spine (50%)
-  // If End: Shift Right more?? No, if end, we want Back Cover centered. Back cover is on LEFT of spine.
-  // So we need to shift spine to Right by 100%?
-  // Let's stick to simple "Center Spine when Open" for now as per user request.
-  
-  return (
-    <div 
-      className={cn(
-        "relative perspective-1000 mx-auto my-6 md:my-10 transition-transform duration-700 ease-in-out",
-        "w-[380px] md:w-[500px] h-[550px] md:h-[700px]",
-        isEnd ? "md:translate-x-[100%]" : (!isCover && "md:translate-x-[50%]")
-      )}
-    >
-      <div className="relative w-full h-full preserve-3d">
-        {pages.map((page, index) => {
-           // We want the pages to stack properly.
-           // When NOT flipped (right side): 
-           // Index 0 is bottom? No, Index 0 is Front Cover. It should be on TOP.
-           // So for right stack: Z = (total - index).
-           // When FLIPPED (left side):
-           // Index 0 is on BOTTOM (under Index 1). 
-           // Wait, if I flip Cover (0) to left, then flip Intro (1) to left.
-           // Intro sits ON TOP of Cover. So Higher Index = Higher Z.
-           
-           const isFlipped = index <= flippedIndex;
-           let zIndex = 0;
-           
-           if (index === zBoostIndex) {
-             zIndex = 100; // Always top during animation
-           } else if (isFlipped) {
-             zIndex = index;
-           } else {
-             zIndex = pages.length - index;
-           }
 
-           return (
-             <Page
-               key={index}
-               index={index}
-               isFlipped={isFlipped}
-               zIndex={zIndex}
-               front={page.front}
-               back={page.back}
-               onFlip={() => handleFlip(index)}
-             />
-           );
-        })}
+  // Current "view" index for dots (0 = cover, pages.length = back cover)
+  const currentView = flippedIndex + 1; // 0 to pages.length
+  const totalViews = pages.length + 1;
+
+  return (
+    <>
+      {/* ────────── Book Container ────────── */}
+      <div
+        className={cn(
+          "relative perspective-1000 mx-auto my-4 md:my-8 transition-transform duration-700 ease-in-out",
+          "w-95 md:w-125 h-137.5 md:h-175",
+          isEnd ? "md:translate-x-full" : (!isCover && "md:translate-x-1/2")
+        )}
+      >
+        <div className="relative w-full h-full preserve-3d">
+          {pages.map((page, index) => {
+            const isFlipped = index <= flippedIndex;
+            let zIndex = 0;
+
+            if (index === zBoostIndex) {
+              zIndex = 100;
+            } else if (isFlipped) {
+              zIndex = index;
+            } else {
+              zIndex = pages.length - index;
+            }
+
+            /**
+             * Only 2 faces should receive pointer events at any time:
+             *  - isLeftActive:  this page is flipped → its BACK FACE is the LEFT visible page
+             *  - isRightActive: this is the next unflipped page → its FRONT FACE is the RIGHT visible page
+             *
+             * All other faces get pointer-events:none so they can't intercept
+             * clicks meant for links/buttons in the active page content.
+             */
+            const isLeftActive = index === flippedIndex;
+            const isRightActive = index === flippedIndex + 1;
+
+            return (
+              <Page
+                key={index}
+                index={index}
+                isFlipped={isFlipped}
+                zIndex={zIndex}
+                front={page.front}
+                back={page.back}
+                onFlip={() => handleFlip(index)}
+                isLeftActive={isLeftActive}
+                isRightActive={isRightActive}
+              />
+            );
+          })}
+        </div>
       </div>
-      
-      {/* Book Cover / Spine Simulation when closed? */}
-      {/* Optional: Add a subtle shadow or desk texture behind */}
-    </div>
+
+      {/* ────────── Navigation Controls ────────── */}
+      <div className="flex flex-col items-center gap-3 mt-1">
+        {/* Section Label */}
+        <span className="text-xs text-gray-500 font-serif italic tracking-wide h-4">
+          {PAGE_LABELS[currentView] ?? ""}
+        </span>
+
+        {/* Arrows + Dots */}
+        <div className="flex items-center gap-3">
+          {/* ← Prev Button */}
+          <button
+            onClick={goBack}
+            disabled={isCover}
+            className={cn(
+              "flex items-center justify-center w-8 h-8 rounded-full border transition-all duration-200",
+              isCover
+                ? "border-gray-200 text-gray-300 cursor-not-allowed"
+                : "border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-600 active:scale-95"
+            )}
+            aria-label="Previous page"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {/* Page Dots */}
+          <div className="flex items-center gap-1.5">
+            {Array.from({ length: totalViews }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => navigateTo(i - 1)}
+                className={cn(
+                  "rounded-full transition-all duration-300",
+                  i === currentView
+                    ? "w-5 h-2 bg-gray-700"
+                    : "w-2 h-2 bg-gray-300 hover:bg-gray-500"
+                )}
+                aria-label={`Go to ${PAGE_LABELS[i]}`}
+              />
+            ))}
+          </div>
+
+          {/* → Next Button */}
+          <button
+            onClick={goForward}
+            disabled={isEnd}
+            className={cn(
+              "flex items-center justify-center w-8 h-8 rounded-full border transition-all duration-200",
+              isEnd
+                ? "border-gray-200 text-gray-300 cursor-not-allowed"
+                : "border-gray-400 text-gray-600 hover:bg-gray-100 hover:border-gray-600 active:scale-95"
+            )}
+            aria-label="Next page"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Keyboard hint */}
+        <p className="text-[10px] text-gray-400 font-serif italic">
+          Click pages or use ← → arrow keys to navigate
+        </p>
+      </div>
+    </>
   );
 }

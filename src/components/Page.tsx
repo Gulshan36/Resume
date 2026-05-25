@@ -1,4 +1,3 @@
-
 "use client";
 
 import { motion } from "framer-motion";
@@ -12,51 +11,97 @@ interface PageProps {
   front: ReactNode;
   back: ReactNode;
   onFlip: () => void;
+  /** This page is the LEFT active page — its BACK FACE is visible */
+  isLeftActive: boolean;
+  /** This page is the RIGHT active page — its FRONT FACE is visible */
+  isRightActive: boolean;
 }
 
-export function Page({ index, isFlipped, zIndex, front, back, onFlip }: PageProps) {
+export function Page({
+  isFlipped,
+  zIndex,
+  front,
+  back,
+  onFlip,
+  isLeftActive,
+  isRightActive,
+}: PageProps) {
   return (
+    /**
+     * motion.div is pointer-events:none by default.
+     * Only the ACTIVE visible face overrides this with pointer-events:auto.
+     * This prevents hidden/background pages from intercepting clicks.
+     */
     <motion.div
       className={cn(
-        "absolute top-0 w-full h-full cursor-pointer preserve-3d origin-left",
+        "absolute top-0 w-full h-full preserve-3d origin-left",
         "shadow-xl rounded-r-lg border-l border-gray-200"
       )}
-      style={{ zIndex }}
+      style={{ zIndex, pointerEvents: "none" }}
       animate={{ rotateY: isFlipped ? -180 : 0 }}
       transition={{ duration: 0.8, type: "spring", stiffness: 60 }}
-      onClick={(e) => {
-        // Prevent flipping if clicking a link, button, or element with no-flip class
-        const target = e.target as HTMLElement;
-        if (target.closest('a, button, [class*="no-flip"]') || target.tagName === 'A' || target.tagName === 'BUTTON') {
-          return;
-        }
-        
-        const selection = window.getSelection();
-        if (selection && selection.toString().length > 0) {
-          return;
-        }
-        onFlip();
-      }}
     >
-      {/* Front Face */}
+      {/* ══════════════════════════════════════
+          FRONT FACE
+          Interactive ONLY when this is the RIGHT active page.
+      ══════════════════════════════════════ */}
       <div
-        className={cn(
-          "absolute w-full h-full backface-hidden bg-[#fdfbf7] p-8 overflow-hidden rounded-r-lg",
-          "flex flex-col border border-gray-300 pattern-paper"
-        )}
+        className="absolute w-full h-full backface-hidden bg-paper overflow-hidden rounded-r-lg flex flex-col border border-gray-300 pattern-paper"
+        style={{ pointerEvents: isRightActive ? "auto" : "none" }}
       >
-        {front}
+        {/* Flip zone — right edge strip triggers page flip */}
+        {isRightActive && (
+          <button
+            aria-label="Flip to next page"
+            onClick={onFlip}
+            className="absolute top-0 right-0 h-full w-14 z-20 cursor-pointer group focus:outline-none"
+            style={{ pointerEvents: "auto" }}
+          >
+            {/* Hover indicator */}
+            <span className="absolute right-1.5 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
+              <span className="block w-0.5 h-8 bg-gray-500 rounded-full mx-auto" />
+              <span className="block w-0.5 h-5 bg-gray-400 rounded-full mx-auto" />
+            </span>
+          </button>
+        )}
+
+        {/* Page content */}
+        <div className="relative w-full h-full p-8" style={{ pointerEvents: "auto" }}>
+          {front}
+        </div>
       </div>
 
-      {/* Back Face */}
+      {/* ══════════════════════════════════════
+          BACK FACE
+          Interactive ONLY when this is the LEFT active page.
+      ══════════════════════════════════════ */}
       <div
-        className={cn(
-          "absolute w-full h-full backface-hidden bg-[#fdfbf7] p-8 overflow-hidden rounded-l-lg",
-          "flex flex-col border border-gray-300 pattern-paper rotate-y-180"
-        )}
-        style={{ transform: "rotateY(180deg)" }}
+        className="absolute w-full h-full backface-hidden bg-paper overflow-hidden rounded-l-lg flex flex-col border border-gray-300 pattern-paper"
+        style={{
+          transform: "rotateY(180deg)",
+          pointerEvents: isLeftActive ? "auto" : "none",
+        }}
       >
-        {back}
+        {/* Flip zone — left edge strip flips page back */}
+        {isLeftActive && (
+          <button
+            aria-label="Flip back to previous page"
+            onClick={onFlip}
+            className="absolute top-0 left-0 h-full w-14 z-20 cursor-pointer group focus:outline-none"
+            style={{ pointerEvents: "auto" }}
+          >
+            {/* Hover indicator */}
+            <span className="absolute left-1.5 top-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
+              <span className="block w-0.5 h-8 bg-gray-500 rounded-full mx-auto" />
+              <span className="block w-0.5 h-5 bg-gray-400 rounded-full mx-auto" />
+            </span>
+          </button>
+        )}
+
+        {/* Page content */}
+        <div className="relative w-full h-full p-8" style={{ pointerEvents: "auto" }}>
+          {back}
+        </div>
       </div>
     </motion.div>
   );

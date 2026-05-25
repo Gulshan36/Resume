@@ -40,6 +40,7 @@ export interface Internship {
   link: string;
   socialMediaLink?: string;
   project: string;
+  duration?: string;
 }
 
 export interface SocialLinks {
@@ -121,7 +122,7 @@ export const portfolioData: PortfolioData = {
     {
       title: "AI-Based Exam Invigilator",
       description: "AI-Based Exam Invigilator is an online proctoring system that uses AI to monitor students during exams and detect cheating activities in real time.",
-      tech: ["Rect.js","Tailwind", "MongoDB", "Tensorflow"],
+      tech: ["React.js", "Tailwind", "MongoDB", "TensorFlow"],
       sourceUrl: "https://github.com/Vivek-Prajapati1/InvigilateX-Ai",
       liveUrl: "https://invigilate-x-ai.vercel.app",
       imageUrl: "/image copy 2.png",
@@ -129,48 +130,52 @@ export const portfolioData: PortfolioData = {
     {
       title: "E-Commerce Platform",
       description: "A full-stack e-commerce solution with React, Node.js, and MongoDB. Features include user authentication, payment processing, and admin dashboard.",
-      tech: ["React", "Node.js", "MongoDB", "Tailwind","Stripe"],
+      tech: ["React", "Node.js", "MongoDB", "Tailwind", "Stripe"],
       sourceUrl: "https://github.com/Gulshan36/E-commerce",
       liveUrl: "https://e-commerce-frontend-delta-umber.vercel.app/",
       imageUrl: "/image.png",
     },
     {
       title: "Quick Rides",
-      description: "A collaborative real time booking ride application with real-time synchronization, location functionality, and admin management features.",
-      tech: ["React", "Tailwind CSS", "Google Maps",  "Socket.IO"],
+      description: "A collaborative real-time ride booking application with real-time synchronization, live location tracking, and admin management features.",
+      tech: ["React", "Tailwind CSS", "Google Maps", "Socket.IO"],
       sourceUrl: "https://github.com/Gulshan36/QuickRides",
       liveUrl: "https://github.com/Gulshan36/QuickRides",
       imageUrl: "/image copy.png",
     },
     {
       title: "Namaste Bharat",
-      description: "Namaste Bharat is a modern ice cream shop website featuring a wide range of flavors with an attractive catalog design. The platform provides a smooth and user-friendly interface for browsing and exploring different ice cream varieties.",
-      tech: ["React.ts","MongoDB","Material-UI","Socket.io  "],
+      description: "Namaste Bharat is a modern ice cream shop website featuring a wide range of flavors with an attractive catalog design. Smooth and user-friendly interface for browsing and exploring different ice cream varieties.",
+      tech: ["React.ts", "MongoDB", "Material-UI", "Socket.io"],
       sourceUrl: "https://github.com/Gulshan36/IceCream",
       liveUrl: "https://ice-cream-vw22.vercel.app/",
       imageUrl: "/image copy 4.png",
     },
     {
       title: "Food Delivery",
-      description: "A food delivery platform with Order food and get it delivered to your doorstep and real time tracking of your order.  ",
-      tech: ["React", "Tailwind CSS", "Google Maps",  "Socket.IO"],
+      description: "A food delivery platform where users can order food and get it delivered to their doorstep with real-time order tracking.",
+      tech: ["React", "Tailwind CSS", "Google Maps", "Socket.IO"],
       sourceUrl: "https://github.com/Gulshan36/Food-Delivery",
-      liveUrl: "https://food-delivery-xi-ashen.vercel.app/  ",
+      liveUrl: "https://food-delivery-xi-ashen.vercel.app/",
       imageUrl: "/image copy 3.png",
     },
   ],
   internships: [
-    {
-      company: "Company Name",
-      role: "Intern",
-      link: "https://example.com",
-      socialMediaLink: "https://linkedin.com/company/example",
-      project: "Describe the internship project here.",
-    }
+    // Add your real internship/work experience data here
+    // Example:
+    // {
+    //   company: "TechCorp Pvt. Ltd.",
+    //   role: "Frontend Developer Intern",
+    //   link: "https://techcorp.com",
+    //   socialMediaLink: "https://linkedin.com/company/techcorp",
+    //   project: "Built a customer dashboard using React and Redux, reducing page load time by 40%.",
+    //   duration: "June 2024 – Aug 2024",
+    // },
   ],
   about: {
-    description: `I'm a software engineer with a passion for building scalable and user-friendly applications. 
-    I specialize in modern web technologies and love solving complex problems. When I'm not coding, you can find me hiking or reading.`,
+    description: `I'm a Computer Engineer passionate about building scalable and user-friendly applications.
+    I specialize in modern web technologies and love turning complex problems into clean, efficient solutions.
+    Always eager to learn, collaborate, and contribute to impactful projects.`,
     social: {
       github: "https://github.com/gulshan36",
       linkedin: "https://www.linkedin.com/in/gulshan-kumar-99489a250/",
